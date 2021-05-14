@@ -1,0 +1,5 @@
+#[Absolute Path cmd]\t[start]\t[end]\t[env1;env2]\t[Message what you want to log]
+#
+#e.g.
+#/home/user/program	1	inf	LD_PRELOAD=/home/user/libmy.so;export PATH=$PWD:PATH	my first program
+$HOME/helloworld	1	inf	none	my_first_log

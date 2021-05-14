@@ -1,0 +1,4 @@
+#[Path the log written by executed program]\t[Path what you wan't to move]
+#
+#e.g.
+#/home/user/logdir/	/home/user/experiment1/log
