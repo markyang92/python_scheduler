@@ -48,7 +48,7 @@ class AppRunner(threading.Thread):
 
         # App is created and start as process instance in THIS THREAD
         try:
-            self.proc=subprocess.Popen(self.app_cmd, env=self.env)
+            self.proc=subprocess.Popen(self.app_cmd, env=self.env, stdout=self.proc.PIPE)
         except Exception as e:
             debugPrint(getframeinfo(currentframe()))
             print(e)
