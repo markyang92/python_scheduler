@@ -2,6 +2,7 @@
 import argparse
 import os.path
 import sys
+from src.color import *
 
 ### for Debug ###
 debug=False
@@ -31,7 +32,7 @@ def parsing():
 
     ### Formatter args.debug ###
     if args.debug:
-        print(args.debug)
+        print(Colors.BOLD + Colors.RED + "This Program will be executed in Debug mode" + Colors.RESET)
         global debug
         debug=True
 
@@ -66,7 +67,14 @@ class Scenario:
             line=line.split('\t')
             schedule_list_now_line=[]
             for idx, var in enumerate(line):
-                schedule_list_now_line.append(var.strip())
+                # CMD:str   start:float end:float   env:str message:str
+                if idx == 1 or idx == 2:
+                    schedule_list_now_line.append(float(var.strip()))
+                elif idx == 3:
+                    if (var.strip()).lower() == "none":
+                        schedule_list_now_line.append(None)
+                else:
+                    schedule_list_now_line.append(var.strip())
 
 
             schedule_list.append(schedule_list_now_line)
