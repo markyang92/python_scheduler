@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import src.parser
 from src.AppRunner import AppRunner
@@ -19,6 +19,8 @@ def run_apps(schedule,log):
     
     for i,app in enumerate(app_runners):
         app.join() # thread join
+    
+    print("This program is done!")
 
 
 def run_expr(schedule,log):

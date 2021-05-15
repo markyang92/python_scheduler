@@ -6,6 +6,7 @@ import shlex
 import os
 
 import src.parser
+from src.color import Colors
 ################### debug ####################
 from inspect import currentframe, getframeinfo
 def debugPrint(frameinfo):
@@ -41,20 +42,24 @@ class AppRunner(threading.Thread):
 
         # execute app
         if self.debug:
-            print("[Info] [{:s}] is executed".format(self.app))
+            print(Colors.MAGENTA+Colors.BOLD+"[Info] [{:s}] is executed".format(self.app)+Colors.RESET)
         
         # start time
         start_time=time.time()
 
         # App is created and start as process instance in THIS THREAD
         try:
-            self.proc=subprocess.Popen(self.app_cmd, env=self.env, stdout=self.proc.PIPE)
-        except Exception as e:
-            debugPrint(getframeinfo(currentframe()))
-            print(e)
+            self.proc=subprocess.Popen(self.app_cmd, env=self.env, stdout=subprocess.PIPE)
+
+        except FileNotFoundError:
+            # 1. If Occured FileNotFoundError Exception, That will pass set_timeout method
+            print(Colors.BOLD+Colors.RED+str(self.app_cmd)+" is not found!"+Colors.RESET)
+            # 2. It will be killed
+            exit()
 
         self.set_timeout(self.end_time)
         out, err=self.proc.communicate()    
+
         if self.debug:
             print(out)
         if err != None: # if err get not None, Then Some Error Occured!
@@ -62,8 +67,6 @@ class AppRunner(threading.Thread):
 
     def set_timeout(self, timeout):
         try:
-            if self.debug:
-                print(self.proc)
             if timeout == float("inf"):
                 self.proc.wait(timeout=float("inf"))
             else:

@@ -2,4 +2,5 @@
 #
 #e.g.
 #/home/user/program	1	inf	LD_PRELOAD=/home/user/libmy.so;export PATH=$PWD:PATH	my first program
-/home/dhyang/helloworld.sh	1	inf	none	my_first_log
+echo "Hello World!"	1	inf	none	my_fist_log
+/home/yangdonghyeon/helloworld	1	inf	none	my_first_log
