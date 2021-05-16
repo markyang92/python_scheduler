@@ -3,14 +3,15 @@ import argparse
 import os.path
 import sys
 from src.color import *
+import glob
 
-### for Debug ###
 debug=False
-from inspect import currentframe, getframeinfo
-def debugPrint(frameinfo):
-    print("{} line: {}".format(frameinfo.filename,frameinfo.lineno),end=' ')
-# debugPrint(getframeinfo(currentframe()))
-#################
+
+def isCorrectFile(path, find_file):
+    if os.path.exists(path) == False:
+        raise FileNotFoundError
+        print("{:s} file doesn't exist!".format(path))
+        sys.exit(1)
 
 def parsing():
     parser = argparse.ArgumentParser()
@@ -22,13 +23,17 @@ def parsing():
     ### Formatter args.scenario ###
     try:
         os.path.exists(args.scenario)
-    except Exception as e:
-        print(e)
+    except FileNotFoundError:
         print("scenario directory doesn't exist!")
+        sys.exit(1)
     else:
         print("scenario directory: " + args.scenario)
     scenario=os.path.normpath(os.path.abspath(args.scenario))
     schedule=scenario+'/expr_schedule'
+    try:
+        isCorrectFile(schedule,os.path.basename(schedule))
+    except:
+        pass
 
     ### Formatter args.debug ###
     if args.debug:

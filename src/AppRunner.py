@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import sys
 import subprocess
 import time
 import threading
@@ -7,12 +8,7 @@ import os
 
 import src.parser
 from src.color import Colors
-################### debug ####################
-from inspect import currentframe, getframeinfo
-def debugPrint(frameinfo):
-    print("{} line: {}".format(frameinfo.filename,frameinfo.lineno),end=' ')
-# debugPrint(getframeinfo(currentframe()))
-############################################
+from src.debug import debugPrint
 class ExperimentKillError(Exception):
     def __init__(self, proc):
         self.proc = proc
@@ -55,7 +51,7 @@ class AppRunner(threading.Thread):
             # 1. If Occured FileNotFoundError Exception, That will pass set_timeout method
             print(Colors.BOLD+Colors.RED+str(self.app_cmd)+" is not found!"+Colors.RESET)
             # 2. It will be killed
-            exit()
+            sys.exit(1)
 
         self.set_timeout(self.end_time)
         out, err=self.proc.communicate()    
@@ -92,7 +88,3 @@ class AppRunner(threading.Thread):
 
     def get_elapsed_time(self):
         return time.time() - self.absolute_time
-
-    def join(self):
-        threading.Thread.join(self)
-        return self._return

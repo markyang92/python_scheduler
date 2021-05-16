@@ -2,6 +2,7 @@
 
 import src.parser
 from src.AppRunner import AppRunner
+from src.debug import *
 import time
 
 def run_apps(schedule,log):
