@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
 import sys
-from src.color import *
+import os
+from src.color import Colors
+
 from inspect import currentframe, getframeinfo
-# -*- Use colored console -*- 
-#
-# print(Colors.Bold+Colors.RED+"msgs"+Colors.RESET)
+
+"""
+* =========================================
+* -*- If you want to output 'Debug File, Debug Name' -*-
+* Other Py:
+* 1. from <PATH>.src.debug import debugPrint
+*
+* 2. debugPrint(getframeinfo(currentframe()))
+*
+* =========================================
+"""
 
 def debugPrint(frameinfo):
     print("{:s}".format(frameinfo.filename),\

@@ -1,21 +1,40 @@
 #!/usr/bin/env python3
 import argparse
+from os import error
 import os.path
 import sys
 from src.color import *
+from src.debug import *
 import glob
 
 debug=False
 
-def isCorrectFile(path, find_file):
-    if os.path.exists(path) == False:
-        raise FileNotFoundError
-        print("{:s} file doesn't exist!".format(path))
+def isThereCorrectFiles(path):
+    found_files=glob.glob(path+'/*')
+    schedule_file_flag=False
+    log_file_flag=False
+    for idx,var in enumerate(found_files):
+        if os.path.basename(var) == "expr_schedule":
+            schedule_file_flag=True
+        elif os.path.basename(var) == "log":
+            log_file_flag=True
+    
+    if schedule_file_flag and log_file_flag:
+        return 
+    else:
+        if not schedule_file_flag:
+            print(Colors.RED+Colors.BOLD+"[ERROR] File Not Found: expr_schedule"+Colors.RESET)
+            sys.stderr.write("[ERROR] File Not Found: expr_schedule")
+        if not log_file_flag:
+            print(Colors.RED+Colors.BOLD+"[ERROR] File Not Found: log"+Colors.RESET)
+            sys.stderr.write("[ERROR] File Not Found: log")
         sys.exit(1)
 
 def parsing():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--scenario", help="Execute scenario path. e.g., --scenario ./scenario/timer_service",required=True)
+    parser = argparse.ArgumentParser(usage="{} --scenario <SCENARIO_PATH> [--debug]".format(sys.argv[0]),
+                                     description="{} -- <SCENARIO_PATH> [-d]".format(sys.argv[0]))
+    parser.add_argument("-s", "--scenario", 
+                        help="Pass the scenario path that will execute.")
     parser.add_argument("-d", "--debug", help="Debug log for experiment script", action="store_true")
 
     args = parser.parse_args()
@@ -24,16 +43,22 @@ def parsing():
     try:
         os.path.exists(args.scenario)
     except FileNotFoundError:
-        print("scenario directory doesn't exist!")
+        print(Colors.RED+Colors.BOLD+"[ERROR] scenario directory doesn't exist!"+Colors.RESET)
         sys.exit(1)
     else:
-        print("scenario directory: " + args.scenario)
-    scenario=os.path.normpath(os.path.abspath(args.scenario))
-    schedule=scenario+'/expr_schedule'
+        print(Colors.BOLD+Colors.BLUE+"scenario: {}".format(args.scenario)+Colors.RESET)
+    scenario_path=os.path.normpath(os.path.abspath(args.scenario))
+    schedule=scenario_path+'/expr_schedule'
+
+    ## Check "is there 'expr_schedule' file exist?""
     try:
-        isCorrectFile(schedule,os.path.basename(schedule))
+        isThereCorrectFiles(scenario_path)
     except:
         pass
+
+    ### Formatter expr_schedule,log ###
+    expr_schedule=scenario_path+'/expr_scenario'
+    log=scenario_path+'/log'
 
     ### Formatter args.debug ###
     if args.debug:
@@ -41,10 +66,8 @@ def parsing():
         global debug
         debug=True
 
-    ### Formatter log ###
-    log=scenario+'/log'
 
-    return Scenario(scenario=scenario,
+    return Scenario(scenario=expr_schedule,
              schedule=schedule,
              log=log)
 
@@ -89,7 +112,14 @@ class Scenario:
         self.schedule=schedule_list
         if debug == True:
             debugPrint(getframeinfo(currentframe()))
-            print(self.schedule)
+            if len(self.schedule) == 0:
+                print(Colors.BOLD+Colors.RED+"Schedule isn't parsed"+Colors.RESET)
+            else:
+                print(Colors.BOLD+Colors.YELLOW+"Schedule is parsed"+Colors.RESET)
+                for idx, var in enumerate(self.schedule):
+                    print("{} Pased line: {}".format(idx,var))
+
+
     
     def logParser(self):
         log_file=open(self.log_path)
@@ -111,6 +141,10 @@ class Scenario:
 
         self.log=log_list
         if debug == True:
-            debugPrint(getframeinfo(currentframe()))
-            print(self.log)
+            if len(self.log) == 0:
+                print(Colors.BOLD+Colors.RED+"Log isn't parsed"+Colors.RESET)
+            else:
+                print(Colors.BOLD+Colors.YELLOW+"Log is parsed"+Colors.RESET)
+                for idx,var in enumerate(self.log):
+                    print("{} Parsed line: {}".format(idx,var))
 

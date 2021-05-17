@@ -1,8 +1,15 @@
 #!/usr/bin/python3
 
-
 # Define "from <where is this file>.color import *" in Other python files
-
+"""
+# ================================
+# -*- This py can control color on colsole
+#
+# Other file:
+# 1. from src.color import *
+#
+# 2. print(Colors.BOLD+"Hello"+Colors.RESET)
+"""
 
 
 # -*- coding: utf-8 -*- 

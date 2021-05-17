@@ -31,8 +31,8 @@ class AppRunner(threading.Thread):
         self._return=None
         
     def run(self):
-        # starts app at desgined time
-        self.wait_till(self.start_time) # Sleep app at 0.5 seconds until start time
+        # At first, Go to sleep "self.app" until self.starttime
+        self.wait_till(self.start_time) # Check Does app still get in sleep until self.starttime. check interval is just 0.5 sec.
 
         # After start time, App will wake up!
 
@@ -40,51 +40,56 @@ class AppRunner(threading.Thread):
         if self.debug:
             print(Colors.MAGENTA+Colors.BOLD+"[Info] [{:s}] is executed".format(self.app)+Colors.RESET)
         
-        # start time
-        start_time=time.time()
 
         # App is created and start as process instance in THIS THREAD
         try:
-            self.proc=subprocess.Popen(self.app_cmd, env=self.env, stdout=subprocess.PIPE)
+            self.proc=subprocess.Popen(self.app_cmd, env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         except FileNotFoundError:
             # 1. If Occured FileNotFoundError Exception, That will pass set_timeout method
-            print(Colors.BOLD+Colors.RED+str(self.app_cmd)+" is not found!"+Colors.RESET)
+            print(Colors.BOLD+Colors.RED+"[Error]: {} is not found! and Killed!".format(str(self.app_cmd))+Colors.RESET)
             # 2. It will be killed
             sys.exit(1)
 
         self.set_timeout(self.end_time)
         out, err=self.proc.communicate()    
 
-        if self.debug:
-            print(out)
-        if err != None: # if err get not None, Then Some Error Occured!
-            print(err)
-
+        print("{}'s STDOUT: {}".format(self.app,out),end='')
+        print("{}'s STDERR: {}".format(self.app,err),)
+        print("{}'s return: {}".format(self.app,self.proc.returncode))
     def set_timeout(self, timeout):
         try:
+            # Timeout is 'inf' then, this app.cmd will not be killed,
+            # Before app.cmd will be done.
             if timeout == float("inf"):
                 self.proc.wait(timeout=float("inf"))
             else:
                 self.proc.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
-            # In this case, App will killed by end_time 
+            # In this case, App will be killed by end_time, no matter Wheather or not this app isn't done.
             self.kill_by_raise()
         
-        else:
-            # In this case, App will be finished Before end_time
-            pass
         
 
     def kill_by_raise(self):
         if self.is_alive():
             raise ExperimentKillError(self.proc)
 
-    def wait_till(self, t, interval=0.5):
-        if t == 0:
+    def wait_till(self, start_time, interval=0.5):
+        if start_time == 0:
+            # If start_time is 0, self.app_cmd is executed as soon as Scheduler app is stated.
             return
-        while self.get_elapsed_time() < t:
+        while self.get_elapsed_time() < start_time:
+            # This task will get sleep mode until App Start time
             time.sleep(interval)
 
     def get_elapsed_time(self):
         return time.time() - self.absolute_time
+
+    def join(self):
+        if not threading.Thread.isAlive(self):
+            threading.Thread.join(self)
+            return 1
+        
+        threading.Thread.join(self)
+        return 0
