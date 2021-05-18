@@ -32,7 +32,7 @@ Description: This script is used for executing specific script.
 import sys
 import os
 sys.path.append(os.getcwd()+'/src')
-from parser import *
+from src.parser import *
 from AppRunner import AppRunner
 from debug import *
 from color import *
@@ -61,7 +61,7 @@ def run_expr(schedule,log):
 
 
 if __name__ == "__main__":
-    scenario1 = parser.parsing()
+    scenario1 = parsing()
     
     run_expr(scenario1.schedule,scenario1.log)
 

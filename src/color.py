@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Define "from <where is this file>.color import *" in Other python files
 """

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import sys
 import os
 sys.path.append(os.getcwd())
@@ -8,7 +8,7 @@ import threading
 import shlex
 
 
-import parser
+from src.parser import *
 from color import Colors
 from debug import debugPrint
 class ExperimentKillError(Exception):
@@ -29,7 +29,7 @@ class AppRunner(threading.Thread):
         self.proc = None
         self.app_cmd=shlex.split(self.app)  
         self.absolute_time=absolute_time
-        self.debug=parser.debug
+        self.debug=debug
         self._return=None
         
     def run(self):
