@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """
 MIT License
 
@@ -31,10 +30,12 @@ Description: This script is used for executing specific script.
 """
 
 import sys
-import src.parser
-from src.AppRunner import AppRunner
-from src.debug import *
-from src.color import *
+import os
+sys.path.append(os.getcwd()+'/src')
+from parser import *
+from AppRunner import AppRunner
+from debug import *
+from color import *
 import time
 
 def run_apps(schedule,log):
@@ -60,7 +61,7 @@ def run_expr(schedule,log):
 
 
 if __name__ == "__main__":
-    scenario1 = src.parser.parsing()
+    scenario1 = parser.parsing()
     
     run_expr(scenario1.schedule,scenario1.log)
 

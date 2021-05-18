@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import sys
 import os
-from src.color import Colors
+
+sys.path.append(os.getcwd())
+from color import Colors
 
 from inspect import currentframe, getframeinfo
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import argparse
-from os import error
-import os.path
+import os
 import sys
-from src.color import *
-from src.debug import *
+sys.path.append(os.getcwd())
+from color import *
+from debug import *
 import glob
 
 debug=False

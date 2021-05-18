@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 import sys
+import os
+sys.path.append(os.getcwd())
 import subprocess
 import time
 import threading
 import shlex
-import os
 
-import src.parser
-from src.color import Colors
-from src.debug import debugPrint
+
+import parser
+from color import Colors
+from debug import debugPrint
 class ExperimentKillError(Exception):
     def __init__(self, proc):
         self.proc = proc
@@ -27,7 +29,7 @@ class AppRunner(threading.Thread):
         self.proc = None
         self.app_cmd=shlex.split(self.app)  
         self.absolute_time=absolute_time
-        self.debug=src.parser.debug
+        self.debug=parser.debug
         self._return=None
         
     def run(self):
