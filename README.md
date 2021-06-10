@@ -1,5 +1,5 @@
 # scripts
-- Author: Mark.yang@lge.com
+- Author: mark.yang@lge.com
 
 1. User descibed each scenario and script will be executed using Thread.
 2. Several Commands will be composed of each Thread
